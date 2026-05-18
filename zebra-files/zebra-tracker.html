@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Zebra Tracker">
+<title>The Zebra Files — Health Tracker</title>
+<style>
+:root {
+  --navy: #1A2744; --navy2: #0F1728; --teal: #0ABFA3; --teal-d: #076B5C;
+  --teal-l: #E4F8F5; --purple: #7C5CBF; --pur-l: #F1EDFB;
+  --coral: #E8704A; --cor-l: #FDF0EB; --amber: #E8A020; --amb-l: #FDF6E3;
+  --blue: #4A90D9; --blu-l: #E8F3FD; --green: #27AE70; --grn-l: #E4F8EE;
+  --red: #E85D4A; --cream: #FAF9F6; --white: #fff;
+  --muted: #6B7A99; --border: rgba(26,39,68,0.1);
+  --text: #1A2744; --text2: #4A5568;
+  --tab-h: 64px; --hdr-h: 60px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--cream);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--text);font-size:16px}
+
+/* ── LAYOUT ── */
+#app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+header{height:var(--hdr-h);background:var(--navy);display:flex;align-items:center;padding:0 18px;gap:10px;flex-shrink:0;position:relative}
+.hdr-logo{width:34px;height:34px;background:var(--teal);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:var(--navy);letter-spacing:-0.5px;flex-shrink:0}
+.hdr-title{font-size:16px;font-weight:600;color:#fff;flex:1}
+.hdr-date{font-size:12px;color:rgba(255,255,255,0.5)}
+.hdr-actions{display:flex;gap:8px}
+.hdr-btn{background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.8);width:36px;height:36px;border-radius:8px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+#main{flex:1;overflow:hidden;position:relative}
+.view{position:absolute;inset:0;overflow-y:auto;padding-bottom:calc(var(--tab-h) + 16px);display:none}
+.view.active{display:block}
+
+nav{height:var(--tab-h);background:var(--white);border-top:0.5px solid var(--border);display:flex;flex-shrink:0;position:relative;z-index:10}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;padding:8px 4px;color:var(--muted);font-size:10px;font-weight:500;transition:color .15s}
+.tab.active{color:var(--teal)}
+.tab-icon{font-size:22px;line-height:1}
+
+/* ── SECTIONS ── */
+.section{background:var(--white);border-radius:16px;margin:12px 14px 0;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.section:last-child{margin-bottom:12px}
+.sec-title{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.sec-title span{font-size:16px}
+
+/* ── SPOON METER ── */
+.spoon-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:8px}
+.spoon-btn{height:52px;border-radius:12px;border:2px solid var(--border);background:var(--cream);font-size:17px;font-weight:700;cursor:pointer;transition:all .15s;color:var(--muted)}
+.spoon-btn.sel{border-color:var(--teal);background:var(--teal);color:var(--navy)}
+.spoon-btn.low{border-color:#FFB3B3;background:#FFF5F5;color:#C0392B}
+.spoon-btn.low.sel{background:#E85D4A;border-color:#E85D4A;color:#fff}
+.spoon-btn.mid{border-color:#FFE0A0;background:#FFFBEF;color:#92600A}
+.spoon-btn.mid.sel{background:var(--amber);border-color:var(--amber);color:#fff}
+.spoon-label{text-align:center;font-size:12px;color:var(--muted);margin-top:6px}
+
+/* ── SLEEP ── */
+.sleep-row{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.sleep-label{font-size:14px;color:var(--text2);width:90px;flex-shrink:0}
+.num-input{border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;font-size:16px;width:80px;outline:none;background:var(--cream);color:var(--text);text-align:center;-webkit-appearance:none}
+.num-input:focus{border-color:var(--teal)}
+.star-row{display:flex;gap:6px}
+.star{font-size:28px;cursor:pointer;opacity:0.3;transition:opacity .1s;line-height:1}
+.star.on{opacity:1}
+
+/* ── SYMPTOMS ── */
+.symptom-list{display:flex;flex-direction:column;gap:8px}
+.symptom-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--cream);border-radius:12px;border:1.5px solid transparent;transition:border-color .15s}
+.symptom-item.active{border-color:var(--teal);background:var(--teal-l)}
+.symptom-check{width:24px;height:24px;border-radius:6px;border:2px solid var(--border);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--white);transition:all .15s;font-size:14px}
+.symptom-item.active .symptom-check{background:var(--teal);border-color:var(--teal);color:var(--white)}
+.symptom-name{flex:1;font-size:15px;font-weight:500;cursor:pointer}
+.severity-dots{display:flex;gap:4px}
+.dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);cursor:pointer;transition:all .15s;background:var(--white)}
+.dot.d1.on{background:#27AE70;border-color:#27AE70}
+.dot.d2.on{background:#7EC8A0;border-color:#7EC8A0}
+.dot.d3.on{background:var(--amber);border-color:var(--amber)}
+.dot.d4.on{background:var(--coral);border-color:var(--coral)}
+.dot.d5.on{background:#C0392B;border-color:#C0392B}
+.add-symptom-row{display:flex;gap:8px;margin-top:10px}
+.add-symptom-row input{flex:1;border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-size:15px;outline:none;background:var(--cream);color:var(--text)}
+.add-symptom-row input:focus{border-color:var(--teal)}
+.add-btn{background:var(--teal);color:var(--navy);border:none;border-radius:10px;padding:11px 18px;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap}
+
+/* ── MEDS ── */
+.med-list{display:flex;flex-wrap:wrap;gap:8px}
+.med-pill{padding:10px 16px;border-radius:24px;border:2px solid var(--border);background:var(--cream);font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;color:var(--text2)}
+.med-pill.taken{background:var(--teal);border-color:var(--teal);color:var(--navy);font-weight:600}
+.med-pill.skipped{background:#FFF0EE;border-color:#E85D4A;color:#A82D1D}
+
+/* ── TEXT AREAS ── */
+.note-area{width:100%;border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font-size:15px;outline:none;background:var(--cream);color:var(--text);resize:none;font-family:inherit;line-height:1.5;min-height:80px}
+.note-area:focus{border-color:var(--teal)}
+.note-area.sm{min-height:60px}
+.input-row{display:flex;flex-direction:column;gap:8px}
+.input-label{font-size:13px;color:var(--muted);font-weight:500}
+
+/* ── WINS / HARD ── */
+.mood-row{display:flex;gap:8px;margin-bottom:12px}
+.mood-btn{flex:1;padding:12px 8px;border-radius:12px;border:2px solid var(--border);background:var(--cream);font-size:13px;font-weight:600;cursor:pointer;text-align:center;transition:all .15s;color:var(--text2)}
+.mood-btn.good.sel{background:var(--grn-l);border-color:var(--green);color:var(--green)}
+.mood-btn.hard.sel{background:var(--cor-l);border-color:var(--coral);color:var(--coral)}
+.mood-btn.mixed.sel{background:var(--amb-l);border-color:var(--amber);color:var(--amber)}
+
+/* ── SAVE BANNER ── */
+#save-bar{position:fixed;bottom:calc(var(--tab-h) + 10px);left:14px;right:14px;background:var(--teal);border-radius:14px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(10,191,163,0.3);transform:translateY(120%);transition:transform .3s;z-index:50}
+#save-bar.show{transform:translateY(0)}
+.save-msg{font-size:14px;font-weight:600;color:var(--navy)}
+.save-now{background:var(--navy);color:var(--white);border:none;border-radius:10px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer}
+
+/* ── HISTORY VIEW ── */
+.hist-week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:4px 0 16px}
+.hist-day{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.hist-day-label{font-size:10px;color:var(--muted);font-weight:500}
+.hist-day-dot{width:36px;height:36px;border-radius:10px;background:var(--cream);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--muted);transition:all .15s}
+.hist-day-dot.has-data{color:var(--white)}
+.hist-entry{padding:14px;background:var(--cream);border-radius:12px;margin-bottom:8px;border-left:3px solid var(--teal);cursor:pointer}
+.hist-entry-date{font-size:12px;color:var(--muted);margin-bottom:4px}
+.hist-entry-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hist-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.hist-symptom-list{font-size:13px;color:var(--text2);margin-top:6px;line-height:1.5}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.empty-title{font-size:17px;font-weight:600;color:var(--text2);margin-bottom:6px}
+.empty-body{font-size:14px;line-height:1.6}
+
+/* ── SETTINGS ── */
+.setting-item{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:0.5px solid var(--border)}
+.setting-item:last-child{border-bottom:none}
+.setting-label{font-size:15px;font-weight:500}
+.setting-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.setting-action{background:var(--cream);border:1.5px solid var(--border);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;color:var(--text)}
+.export-btn{width:100%;background:var(--navy);color:var(--white);border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;margin-top:8px}
+.export-btn:active{transform:scale(0.98)}
+
+/* ── TOAST ── */
+#toast{position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--navy);color:#fff;padding:10px 20px;border-radius:24px;font-size:14px;font-weight:500;opacity:0;transition:all .3s;z-index:100;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── MODAL ── */
+#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:flex-end}
+#modal-overlay.show{display:flex}
+#modal{background:var(--white);border-radius:20px 20px 0 0;width:100%;max-height:80vh;overflow-y:auto;padding:20px}
+.modal-title{font-size:18px;font-weight:700;margin-bottom:16px}
+.modal-close{float:right;background:none;border:none;font-size:24px;cursor:pointer;color:var(--muted);margin-top:-4px}
+
+@media(min-width:600px){
+  #app{max-width:420px;margin:0 auto;box-shadow:0 0 40px rgba(0,0,0,0.15)}
+  #save-bar{max-width:calc(420px - 28px);left:50%;transform:translateX(-50%) translateY(120%)}
+  #save-bar.show{transform:translateX(-50%) translateY(0)}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- HEADER -->
+<header>
+  <div class="hdr-logo">ZF</div>
+  <div class="hdr-title">Health Tracker</div>
+  <div class="hdr-date" id="hdr-date"></div>
+  <div class="hdr-actions">
+    <button class="hdr-btn" onclick="showHistory()" title="History">📅</button>
+  </div>
+</header>
+
+<!-- MAIN VIEWS -->
+<div id="main">
+
+  <!-- TODAY VIEW -->
+  <div class="view active" id="view-today">
+
+    <!-- Spoon Meter -->
+    <div class="section">
+      <div class="sec-title"><span>🥄</span> Energy / Spoon Level</div>
+      <div class="spoon-grid" id="spoon-grid"></div>
+      <div class="spoon-label" id="spoon-label">Tap to set your level for today</div>
+    </div>
+
+    <!-- Sleep -->
+    <div class="section">
+      <div class="sec-title"><span>😴</span> Sleep</div>
+      <div class="sleep-row">
+        <div class="sleep-label">Hours slept</div>
+        <input class="num-input" type="number" id="sleep-hours" min="0" max="24" step="0.5" placeholder="7" onchange="autosave()">
+      </div>
+      <div class="sleep-row">
+        <div class="sleep-label">Quality</div>
+        <div class="star-row" id="sleep-stars"></div>
+      </div>
+    </div>
+
+    <!-- Symptoms -->
+    <div class="section">
+      <div class="sec-title"><span>🌡️</span> Symptoms Today</div>
+      <div class="symptom-list" id="symptom-list"></div>
+      <div class="add-symptom-row">
+        <input type="text" id="new-symptom" placeholder="Add a symptom..." onkeydown="if(event.key==='Enter')addSymptom()">
+        <button class="add-btn" onclick="addSymptom()">+ Add</button>
+      </div>
+    </div>
+
+    <!-- Medications -->
+    <div class="section">
+      <div class="sec-title"><span>💊</span> Medications</div>
+      <div class="med-list" id="med-list"></div>
+      <div class="add-symptom-row" style="margin-top:10px">
+        <input type="text" id="new-med" placeholder="Add a medication..." onkeydown="if(event.key==='Enter')addMed()">
+        <button class="add-btn" onclick="addMed()">+ Add</button>
+      </div>
+    </div>
+
+    <!-- Food & Diet -->
+    <div class="section">
+      <div class="sec-title"><span>🥗</span> Food & Diet</div>
+      <div class="input-row">
+        <div class="input-label">What did you eat? Any reactions?</div>
+        <textarea class="note-area sm" id="food-notes" placeholder="e.g. Gluten-free all day, stomach felt ok. Had a reaction to something at dinner..." onchange="autosave()"></textarea>
+      </div>
+    </div>
+
+    <!-- Appointments -->
+    <div class="section">
+      <div class="sec-title"><span>🏥</span> Appointments & Provider Notes</div>
+      <div class="input-row">
+        <div class="input-label">Any appointments today?</div>
+        <textarea class="note-area sm" id="appt-notes" placeholder="e.g. Cardiology 2pm — Dr. Hsing adjusted Ivabradine dose. Said HR still high. Follow up in 6 weeks." onchange="autosave()"></textarea>
+      </div>
+    </div>
+
+    <!-- Questions for Doctor -->
+    <div class="section">
+      <div class="sec-title"><span>❓</span> Questions for My Doctor</div>
+      <div class="input-row">
+        <div class="input-label">Things to ask at your next appointment</div>
+        <textarea class="note-area" id="doc-questions" placeholder="e.g. Ask about the new MCAS protocol. Why is my HR still spiking in the morning? Is this medication causing more fatigue?" onchange="autosave()"></textarea>
+      </div>
+    </div>
+
+    <!-- Wins & Hard Moments -->
+    <div class="section">
+      <div class="sec-title"><span>💙</span> How was today?</div>
+      <div class="mood-row">
+        <button class="mood-btn good" id="mood-good" onclick="setMood('good')">✨ Good day</button>
+        <button class="mood-btn mixed" id="mood-mixed" onclick="setMood('mixed')">🌤 Mixed</button>
+        <button class="mood-btn hard" id="mood-hard" onclick="setMood('hard')">🌊 Hard day</button>
+      </div>
+      <div class="input-row" style="margin-bottom:10px">
+        <div class="input-label">A win today (big or tiny)</div>
+        <textarea class="note-area sm" id="wins" placeholder="e.g. Made it to the mailbox. Ate a full meal. Got dressed. Called a friend." onchange="autosave()"></textarea>
+      </div>
+      <div class="input-row">
+        <div class="input-label">A hard moment</div>
+        <textarea class="note-area sm" id="hard" placeholder="e.g. Bad dizzy spell at 11am. Couldn't get off the couch by 3pm. Pain flare started around dinner." onchange="autosave()"></textarea>
+      </div>
+    </div>
+
+    <!-- General Notes -->
+    <div class="section">
+      <div class="sec-title"><span>📝</span> Other Notes</div>
+      <textarea class="note-area" id="general-notes" placeholder="Anything else worth remembering today..." onchange="autosave()"></textarea>
+    </div>
+
+  </div><!-- /today -->
+
+  <!-- HISTORY VIEW -->
+  <div class="view" id="view-history">
+    <div class="section">
+      <div class="sec-title"><span>📊</span> Last 7 Days</div>
+      <div class="hist-week" id="hist-week"></div>
+    </div>
+    <div class="section">
+      <div class="sec-title"><span>📋</span> Past Entries</div>
+      <div id="hist-entries"></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS VIEW -->
+  <div class="view" id="view-settings">
+    <div class="section">
+      <div class="sec-title"><span>⚙️</span> App Settings</div>
+      <div class="setting-item">
+        <div>
+          <div class="setting-label">Your name</div>
+          <div class="setting-sub">Shown on exported reports</div>
+        </div>
+        <input style="border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;width:130px;outline:none;background:var(--cream)" id="user-name" placeholder="Your name" onchange="saveSetting('name',this.value)">
+      </div>
+      <div class="setting-item">
+        <div>
+          <div class="setting-label">Reminder notification</div>
+          <div class="setting-sub">Daily log reminder (browser only)</div>
+        </div>
+        <button class="setting-action" onclick="requestNotif()">Enable</button>
+      </div>
+      <div class="setting-item">
+        <div>
+          <div class="setting-label">Clear today's entry</div>
+          <div class="setting-sub">Start fresh for today</div>
+        </div>
+        <button class="setting-action" onclick="clearToday()" style="color:#E85D4A">Clear</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title"><span>📤</span> Export & Share</div>
+      <div class="setting-item">
+        <div>
+          <div class="setting-label">Export last 30 days</div>
+          <div class="setting-sub">Download as text file to share with your doctor</div>
+        </div>
+      </div>
+      <button class="export-btn" onclick="exportData()">📋 Export Health Report</button>
+    </div>
+
+    <div class="section">
+      <div class="sec-title"><span>🦓</span> About</div>
+      <div class="setting-item">
+        <div>
+          <div class="setting-label">The Zebra Files</div>
+          <div class="setting-sub">Palliative Care Education Program<br>Built by a patient, for patients.</div>
+        </div>
+      </div>
+      <div class="setting-item">
+        <div>
+          <div class="setting-label">Version 1.0</div>
+          <div class="setting-sub">All data stays on your device. Nothing is sent anywhere.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- BOTTOM NAV -->
+<nav>
+  <button class="tab active" id="tab-today" onclick="switchTab('today')">
+    <div class="tab-icon">📋</div>Today
+  </button>
+  <button class="tab" id="tab-history" onclick="switchTab('history')">
+    <div class="tab-icon">📅</div>History
+  </button>
+  <button class="tab" id="tab-settings" onclick="switchTab('settings')">
+    <div class="tab-icon">⚙️</div>Settings
+  </button>
+</nav>
+
+<!-- SAVE BAR -->
+<div id="save-bar">
+  <div class="save-msg">📝 Unsaved changes</div>
+  <button class="save-now" onclick="saveToday()">Save Day</button>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- MODAL -->
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────
+const KEY = 'zf_tracker';
+const SETTINGS_KEY = 'zf_settings';
+
+function getAll() {
+  try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { return {}; }
+}
+function saveAll(data) { localStorage.setItem(KEY, JSON.stringify(data)); }
+function getSettings() {
+  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); } catch(e) { return {}; }
+}
+function saveSetting(k, v) {
+  const s = getSettings(); s[k] = v;
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(s));
+}
+
+function todayKey() {
+  return new Date().toISOString().split('T')[0];
+}
+function getTodayData() {
+  const all = getAll();
+  return all[todayKey()] || {
+    spoons: null, sleep: { hours: null, quality: 0 },
+    symptoms: [], meds: [],
+    food: '', appt: '', questions: '', wins: '', hard: '', notes: '',
+    mood: null, timestamp: null
+  };
+}
+
+// ── STATE ───────────────────────────────────────────────────────────
+let today = getTodayData();
+let dirty = false;
+let defaultSymptoms = [
+  'Joint pain','Fatigue','Brain fog','Headache','Dizziness',
+  'Nausea','Heart racing (POTS)','Shortness of breath','Muscle weakness','GI pain'
+];
+let defaultMeds = [];
+const settings = getSettings();
+
+// ── INIT ─────────────────────────────────────────────────────────────
+function init() {
+  // Header date
+  const now = new Date();
+  document.getElementById('hdr-date').textContent = now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+
+  buildSpoonMeter();
+  buildSleepStars();
+  loadSymptoms();
+  loadMeds();
+
+  // Restore text fields
+  document.getElementById('food-notes').value = today.food || '';
+  document.getElementById('appt-notes').value = today.appt || '';
+  document.getElementById('doc-questions').value = today.questions || '';
+  document.getElementById('wins').value = today.wins || '';
+  document.getElementById('hard').value = today.hard || '';
+  document.getElementById('general-notes').value = today.notes || '';
+  if(today.mood) setMood(today.mood, false);
+
+  // Settings
+  const nameEl = document.getElementById('user-name');
+  if(nameEl && settings.name) nameEl.value = settings.name;
+}
+
+// ── SPOON METER ──────────────────────────────────────────────────────
+const spoonLabels = ['','Barely here','Very low','Low','Low-ish','Halfway','Not bad','Pretty good','Good','Really good','Full tank'];
+function buildSpoonMeter() {
+  const grid = document.getElementById('spoon-grid');
+  grid.innerHTML = '';
+  for(let i=1; i<=10; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'spoon-btn' + (i<=3?' low':i<=6?' mid':'');
+    btn.textContent = i;
+    if(today.spoons === i) btn.classList.add('sel');
+    btn.onclick = () => {
+      document.querySelectorAll('.spoon-btn').forEach(b=>b.classList.remove('sel'));
+      btn.classList.add('sel');
+      today.spoons = i;
+      document.getElementById('spoon-label').textContent = spoonLabels[i];
+      autosave();
+    };
+    grid.appendChild(btn);
+  }
+  if(today.spoons) document.getElementById('spoon-label').textContent = spoonLabels[today.spoons];
+}
+
+// ── SLEEP STARS ──────────────────────────────────────────────────────
+function buildSleepStars() {
+  const row = document.getElementById('sleep-stars');
+  row.innerHTML = '';
+  const labels = ['','Terrible','Poor','Okay','Good','Great'];
+  for(let i=1;i<=5;i++) {
+    const s = document.createElement('div');
+    s.className = 'star' + (i <= (today.sleep.quality||0) ? ' on' : '');
+    s.textContent = '⭐';
+    s.title = labels[i];
+    s.onclick = () => {
+      today.sleep.quality = i;
+      document.querySelectorAll('.star').forEach((el,idx)=>{
+        el.classList.toggle('on', idx < i);
+      });
+      autosave();
+    };
+    row.appendChild(s);
+  }
+  const hrs = document.getElementById('sleep-hours');
+  if(today.sleep.hours) hrs.value = today.sleep.hours;
+  hrs.onchange = () => { today.sleep.hours = parseFloat(hrs.value)||null; autosave(); };
+}
+
+// ── SYMPTOMS ─────────────────────────────────────────────────────────
+function loadSymptoms() {
+  const saved = today.symptoms.map(s=>s.name);
+  // Merge default + saved custom
+  const all = [...new Set([...defaultSymptoms, ...saved])];
+  const list = document.getElementById('symptom-list');
+  list.innerHTML = '';
+  all.forEach(name => {
+    const existing = today.symptoms.find(s=>s.name===name);
+    appendSymptomEl(name, existing ? existing.severity : 0, !!existing);
+  });
+}
+
+function appendSymptomEl(name, severity, active) {
+  const list = document.getElementById('symptom-list');
+  const item = document.createElement('div');
+  item.className = 'symptom-item' + (active?' active':'');
+  item.dataset.name = name;
+
+  const check = document.createElement('div');
+  check.className = 'symptom-check';
+  check.textContent = active ? '✓' : '';
+  check.onclick = () => toggleSymptom(name, item, check);
+
+  const nameEl = document.createElement('div');
+  nameEl.className = 'symptom-name';
+  nameEl.textContent = name;
+  nameEl.onclick = () => toggleSymptom(name, item, check);
+
+  const dots = document.createElement('div');
+  dots.className = 'severity-dots';
+  for(let i=1;i<=5;i++) {
+    const dot = document.createElement('div');
+    dot.className = `dot d${i}` + (i<=severity?' on':'');
+    dot.title = ['','Mild','Low','Moderate','High','Severe'][i];
+    dot.onclick = (e) => { e.stopPropagation(); setSeverity(name, i, dots); };
+    dots.appendChild(dot);
+  }
+
+  item.appendChild(check);
+  item.appendChild(nameEl);
+  item.appendChild(dots);
+  list.appendChild(item);
+}
+
+function toggleSymptom(name, item, check) {
+  const active = !item.classList.contains('active');
+  item.classList.toggle('active', active);
+  check.textContent = active ? '✓' : '';
+  if(active) {
+    if(!today.symptoms.find(s=>s.name===name)) {
+      today.symptoms.push({name, severity:0});
+    }
+  } else {
+    today.symptoms = today.symptoms.filter(s=>s.name!==name);
+  }
+  autosave();
+}
+
+function setSeverity(name, level, dotsEl) {
+  dotsEl.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i<level));
+  const sym = today.symptoms.find(s=>s.name===name);
+  if(sym) sym.severity = level;
+  else { today.symptoms.push({name,severity:level}); }
+  // Mark item active
+  const item = document.querySelector(`.symptom-item[data-name="${name}"]`);
+  if(item) {
+    item.classList.add('active');
+    item.querySelector('.symptom-check').textContent = '✓';
+  }
+  autosave();
+}
+
+function addSymptom() {
+  const inp = document.getElementById('new-symptom');
+  const name = inp.value.trim();
+  if(!name) return;
+  if(document.querySelector(`.symptom-item[data-name="${name}"]`)) {
+    showToast('Already in list!'); return;
+  }
+  today.symptoms.push({name, severity:0});
+  appendSymptomEl(name, 0, true);
+  inp.value = '';
+  autosave();
+}
+
+// ── MEDICATIONS ──────────────────────────────────────────────────────
+function loadMeds() {
+  const all = getSettings().meds || ['Ivabradine','Plaquenil','Allegra','Famotidine','Lansoprazole'];
+  const list = document.getElementById('med-list');
+  list.innerHTML = '';
+  all.forEach(name => appendMedEl(name));
+}
+
+function appendMedEl(name) {
+  const list = document.getElementById('med-list');
+  const pill = document.createElement('button');
+  pill.className = 'med-pill' + (today.meds.includes(name) ? ' taken' : '');
+  pill.dataset.name = name;
+  pill.textContent = (today.meds.includes(name) ? '✓ ' : '') + name;
+  pill.onclick = () => toggleMed(name, pill);
+  list.appendChild(pill);
+}
+
+function toggleMed(name, pill) {
+  if(today.meds.includes(name)) {
+    today.meds = today.meds.filter(m=>m!==name);
+    pill.classList.remove('taken','skipped');
+    pill.textContent = name;
+  } else {
+    today.meds.push(name);
+    pill.classList.add('taken');
+    pill.textContent = '✓ ' + name;
+  }
+  autosave();
+}
+
+function addMed() {
+  const inp = document.getElementById('new-med');
+  const name = inp.value.trim();
+  if(!name) return;
+  const s = getSettings();
+  if(!s.meds) s.meds = ['Ivabradine','Plaquenil','Allegra','Famotidine','Lansoprazole'];
+  if(!s.meds.includes(name)) { s.meds.push(name); localStorage.setItem(SETTINGS_KEY,JSON.stringify(s)); }
+  today.meds.push(name);
+  appendMedEl(name);
+  inp.value = '';
+  autosave();
+}
+
+// ── MOOD ─────────────────────────────────────────────────────────────
+function setMood(m, save=true) {
+  today.mood = m;
+  ['good','mixed','hard'].forEach(id=>{
+    document.getElementById('mood-'+id).classList.toggle('sel', id===m);
+  });
+  if(save) autosave();
+}
+
+// ── SAVE ─────────────────────────────────────────────────────────────
+let saveTimer = null;
+function autosave() {
+  // Collect text fields
+  today.food = document.getElementById('food-notes').value;
+  today.appt = document.getElementById('appt-notes').value;
+  today.questions = document.getElementById('doc-questions').value;
+  today.wins = document.getElementById('wins').value;
+  today.hard = document.getElementById('hard').value;
+  today.notes = document.getElementById('general-notes').value;
+  dirty = true;
+  document.getElementById('save-bar').classList.add('show');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => saveToday(true), 8000);
+}
+
+function saveToday(auto=false) {
+  today.timestamp = new Date().toISOString();
+  const all = getAll();
+  all[todayKey()] = today;
+  saveAll(all);
+  dirty = false;
+  document.getElementById('save-bar').classList.remove('show');
+  if(!auto) showToast('✓ Saved!');
+}
+
+// ── HISTORY ──────────────────────────────────────────────────────────
+function buildHistory() {
+  const all = getAll();
+  const keys = Object.keys(all).sort().reverse();
+
+  // 7-day week
+  const week = document.getElementById('hist-week');
+  week.innerHTML = '';
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const today7 = new Date();
+  for(let i=6;i>=0;i--) {
+    const d = new Date(today7);
+    d.setDate(d.getDate()-i);
+    const key = d.toISOString().split('T')[0];
+    const entry = all[key];
+    const spoons = entry ? entry.spoons : null;
+    const div = document.createElement('div');
+    div.className = 'hist-day';
+    const label = document.createElement('div');
+    label.className = 'hist-day-label';
+    label.textContent = days[d.getDay()];
+    const dot = document.createElement('div');
+    dot.className = 'hist-day-dot' + (spoons?'  has-data':'');
+    if(spoons) {
+      const col = spoons<=3?'#E85D4A':spoons<=6?'#E8A020':spoons<=8?'#0ABFA3':'#27AE70';
+      dot.style.background = col;
+      dot.style.borderColor = col;
+      dot.textContent = spoons;
+    } else {
+      dot.textContent = '—';
+    }
+    if(entry) dot.onclick = () => showEntryModal(key, entry);
+    div.appendChild(label);
+    div.appendChild(dot);
+    week.appendChild(div);
+  }
+
+  // Entry list
+  const entriesList = document.getElementById('hist-entries');
+  if(keys.length === 0) {
+    entriesList.innerHTML = `<div class="empty-state"><div class="empty-icon">🦓</div><div class="empty-title">No entries yet</div><div class="empty-body">Log your first day using the Today tab.<br>Your history will show up here.</div></div>`;
+    return;
+  }
+  entriesList.innerHTML = '';
+  keys.slice(0,30).forEach(key => {
+    const e = all[key];
+    const d = new Date(key+'T12:00:00');
+    const dateStr = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+    const div = document.createElement('div');
+    div.className = 'hist-entry';
+    div.onclick = () => showEntryModal(key, e);
+    const spoonCol = !e.spoons?'#888':e.spoons<=3?'#E85D4A':e.spoons<=6?'#E8A020':e.spoons<=8?'#0ABFA3':'#27AE70';
+    div.innerHTML = `
+      <div class="hist-entry-date">${dateStr}</div>
+      <div class="hist-entry-row">
+        ${e.spoons?`<span class="hist-badge" style="background:${spoonCol}20;color:${spoonCol}">🥄 ${e.spoons}/10 spoons</span>`:''}
+        ${e.sleep?.hours?`<span class="hist-badge" style="background:#E8F3FD;color:#1D5FA0">😴 ${e.sleep.hours}h sleep</span>`:''}
+        ${e.mood?`<span class="hist-badge" style="background:var(--cream);color:var(--text2)">${e.mood==='good'?'✨ Good':e.mood==='hard'?'🌊 Hard':'🌤 Mixed'}</span>`:''}
+      </div>
+      ${e.symptoms?.length?`<div class="hist-symptom-list">Symptoms: ${e.symptoms.map(s=>s.name+(s.severity?` (${s.severity}/5)`:'')).join(', ')}</div>`:''}
+    `;
+    entriesList.appendChild(div);
+  });
+}
+
+function showEntryModal(key, entry) {
+  const d = new Date(key+'T12:00:00');
+  const dateStr = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  const sections = [];
+  if(entry.spoons) sections.push(`<p><strong>🥄 Spoon level:</strong> ${entry.spoons}/10</p>`);
+  if(entry.sleep?.hours) sections.push(`<p><strong>😴 Sleep:</strong> ${entry.sleep.hours} hours, quality ${entry.sleep.quality}/5</p>`);
+  if(entry.symptoms?.length) sections.push(`<p><strong>🌡️ Symptoms:</strong> ${entry.symptoms.map(s=>s.name+(s.severity?` ${s.severity}/5`:'')).join(', ')}</p>`);
+  if(entry.meds?.length) sections.push(`<p><strong>💊 Meds taken:</strong> ${entry.meds.join(', ')}</p>`);
+  if(entry.food) sections.push(`<p><strong>🥗 Food:</strong> ${entry.food}</p>`);
+  if(entry.appt) sections.push(`<p><strong>🏥 Appointments:</strong> ${entry.appt}</p>`);
+  if(entry.questions) sections.push(`<p><strong>❓ Doctor questions:</strong> ${entry.questions}</p>`);
+  if(entry.wins) sections.push(`<p><strong>✨ Wins:</strong> ${entry.wins}</p>`);
+  if(entry.hard) sections.push(`<p><strong>🌊 Hard moments:</strong> ${entry.hard}</p>`);
+  if(entry.notes) sections.push(`<p><strong>📝 Notes:</strong> ${entry.notes}</p>`);
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-title">${dateStr}</div>
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:15px;line-height:1.6;color:var(--text2)">
+      ${sections.join('')}
+    </div>
+  `;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function closeModal(e) {
+  if(!e || e.target===document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('show');
+  }
+}
+
+// ── TABS ─────────────────────────────────────────────────────────────
+function switchTab(name) {
+  ['today','history','settings'].forEach(t=>{
+    document.getElementById('view-'+t).classList.toggle('active', t===name);
+    document.getElementById('tab-'+t).classList.toggle('active', t===name);
+  });
+  if(name==='history') buildHistory();
+}
+
+function showHistory() { switchTab('history'); }
+
+// ── EXPORT ───────────────────────────────────────────────────────────
+function exportData() {
+  const all = getAll();
+  const keys = Object.keys(all).sort().reverse().slice(0,30);
+  const name = getSettings().name || 'Patient';
+  let report = `THE ZEBRA FILES — HEALTH TRACKER REPORT\n`;
+  report += `Patient: ${name}\n`;
+  report += `Generated: ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}\n`;
+  report += `${'─'.repeat(50)}\n\n`;
+  keys.forEach(key => {
+    const e = all[key];
+    const d = new Date(key+'T12:00:00');
+    report += `📅 ${d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}\n`;
+    if(e.spoons) report += `   Spoon level: ${e.spoons}/10\n`;
+    if(e.sleep?.hours) report += `   Sleep: ${e.sleep.hours}h (quality ${e.sleep.quality}/5)\n`;
+    if(e.symptoms?.length) report += `   Symptoms: ${e.symptoms.map(s=>s.name+(s.severity?` [${s.severity}/5]`:'')).join(', ')}\n`;
+    if(e.meds?.length) report += `   Medications taken: ${e.meds.join(', ')}\n`;
+    if(e.food) report += `   Food: ${e.food}\n`;
+    if(e.appt) report += `   Appointments: ${e.appt}\n`;
+    if(e.questions) report += `   Questions for doctor: ${e.questions}\n`;
+    if(e.wins) report += `   Wins: ${e.wins}\n`;
+    if(e.hard) report += `   Hard moments: ${e.hard}\n`;
+    if(e.notes) report += `   Notes: ${e.notes}\n`;
+    report += '\n';
+  });
+  report += `─`.repeat(50) + `\nthezebrafiles.com\n`;
+  const blob = new Blob([report], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `zebra-health-report-${todayKey()}.txt`;
+  a.click();
+  showToast('✓ Report downloaded!');
+}
+
+// ── UTILS ────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+function clearToday() {
+  if(!confirm('Clear all of today\'s entries?')) return;
+  today = {spoons:null,sleep:{hours:null,quality:0},symptoms:[],meds:[],food:'',appt:'',questions:'',wins:'',hard:'',notes:'',mood:null,timestamp:null};
+  init();
+  showToast('Today cleared');
+}
+
+function requestNotif() {
+  if('Notification' in window) {
+    Notification.requestPermission().then(p=>showToast(p==='granted'?'✓ Notifications on':'Notifications blocked'));
+  } else { showToast('Not supported on this browser'); }
+}
+
+// ── START ────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
