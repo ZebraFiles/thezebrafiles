@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="index, follow">
+
+<!-- ── PRIMARY SEO ── -->
+<title>The Zebra Files | Health Management Tools for Chronic Illness Patients</title>
+<meta name="description" content="Patient-created health management tools for complex chronic illness. Fillable medical resume, post-op critical care alert, and PGx genetic testing guide. Built by an EDS, POTS, and MCAS patient for the zebra community.">
+<meta name="keywords" content="EDS patient tools, chronic illness medical resume, post-op care alert, pharmacogenomics guide, POTS MCAS patient documents, rare disease health tools, zebra community, palliative care education, complex patient documents, fillable medical PDF">
+<link rel="canonical" href="https://www.thezebrafiles.com/">
+
+<!-- ── OPEN GRAPH (Facebook / social sharing) ── -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.thezebrafiles.com/">
+<meta property="og:title" content="The Zebra Files | Health Management Tools for Chronic Illness Patients">
+<meta property="og:description" content="Fillable medical documents, a daily health tracker, and a pharmacogenomics guide — built by a patient, for patients. Simple enough for brain fog days.">
+<meta property="og:image" content="https://www.thezebrafiles.com/og-image.png">
+<meta property="og:site_name" content="The Zebra Files">
+<meta property="og:locale" content="en_US">
+
+<!-- ── TWITTER CARD ── -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://www.thezebrafiles.com/">
+<meta name="twitter:title" content="The Zebra Files | Health Management Tools for Chronic Illness Patients">
+<meta name="twitter:description" content="Fillable medical documents and patient tools for EDS, POTS, MCAS, and complex chronic illness. Built by a patient, for patients.">
+<meta name="twitter:image" content="https://www.thezebrafiles.com/og-image.png">
+
+<!-- ── STRUCTURED DATA (Google Rich Results) ── -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "The Zebra Files",
+  "url": "https://www.thezebrafiles.com",
+  "description": "Palliative care education program offering health management tools for complex chronic illness patients.",
+  "sameAs": [
+    "https://www.facebook.com/profile.php?id=61590038851920",
+    "https://www.instagram.com/thezebrafiles",
+    "https://www.tiktok.com/@thezebrafiles"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "The Zebra Files Health Management Tools",
+  "description": "Patient-created health management tools for complex chronic illness",
+  "itemListElement": [
+    {
+      "@type": "Product",
+      "position": 1,
+      "name": "Patient Medical Resume",
+      "description": "A complete fillable medical document with 9 color-coded sections covering diagnoses, medications, allergies, surgical history, care team, and emergency contacts.",
+      "url": "https://zebrafiles.gumroad.com/l/ayhwt",
+      "offers": {
+        "@type": "Offer",
+        "price": "2.00",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 2,
+      "name": "Post-Op Critical Care Alert",
+      "description": "One-page fillable document for surgical teams covering contraindicated medications, pharmacogenomics, POTS and MCAS protocols, and surgical history.",
+      "url": "https://zebrafiles.gumroad.com/l/lhloec",
+      "offers": {
+        "@type": "Offer",
+        "price": "2.00",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    {
+      "@type": "Product",
+      "position": 3,
+      "name": "Genetic Testing and AI Guide",
+      "description": "Step-by-step guide to pharmacogenomics testing and using AI to interpret genetic results for medication safety.",
+      "url": "https://zebrafiles.gumroad.com/l/dzryv",
+      "offers": {
+        "@type": "Offer",
+        "price": "5.00",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      }
+ 
+  ]
+}
+</script>
+
+<!-- ── FONTS ── -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: #FAF9F6; color: #1A2744; }
+a { color: inherit; text-decoration: none; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: #1A2744;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; height: 60px;
+}
+.logo { color: #0ABFA3; font-size: 18px; font-weight: 700; }
+.nav-links { display: flex; gap: 24px; list-style: none; align-items: center; }
+.nav-links a { color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 500; }
+.nav-links a:hover { color: #0ABFA3; }
+.nav-btn {
+  background: #0ABFA3; color: #1A2744 !important;
+  padding: 8px 18px; border-radius: 6px; font-weight: 700 !important;
+}
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer;
+  padding: 8px; min-width: 44px; min-height: 44px;
+  justify-content: center; align-items: center;
+}
+.hamburger span { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; }
+#mobile-menu {
+  display: none; position: fixed; top: 60px; left: 0; right: 0;
+  background: #1A2744; border-top: 1px solid rgba(255,255,255,0.1);
+  z-index: 99; padding: 16px 24px 24px;
+}
+#mobile-menu.open { display: block; }
+#mobile-menu ul { list-style: none; }
+#mobile-menu li { border-bottom: 1px solid rgba(255,255,255,0.06); }
+#mobile-menu a { display: block; color: rgba(255,255,255,0.8); font-size: 16px; font-weight: 500; padding: 14px 0; }
+#mobile-menu .mob-cta { display: block; margin-top: 16px; background: #0ABFA3; color: #1A2744; font-weight: 700; font-size: 16px; padding: 14px; border-radius: 8px; text-align: center; }
+@media(max-width:700px) { .nav-links { display: none; } .hamburger { display: flex; } }
+@media(min-width:701px) { .nav-links { display: flex !important; } .hamburger { display: none !important; } }
+
+/* HERO */
+.hero {
+  background: #1A2744;
+  padding: 148px 24px 80px;
+  text-align: center;
+}
+.hero-eyebrow {
+  display: inline-block;
+  background: rgba(10,191,163,0.15);
+  color: #0ABFA3;
+  border: 1px solid rgba(10,191,163,0.3);
+  padding: 6px 16px; border-radius: 20px;
+  font-size: 12px; font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase; margin-bottom: 20px;
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-weight: 700; color: #fff;
+  line-height: 1.1; margin-bottom: 20px;
+}
+.hero h1 span { color: #0ABFA3; }
+.hero p {
+  font-size: 1.1rem; color: rgba(255,255,255,0.65);
+  max-width: 560px; margin: 0 auto 32px; line-height: 1.65;
+}
+.hero-btn {
+  display: inline-block;
+  background: #0ABFA3; color: #1A2744;
+  font-weight: 700; font-size: 16px;
+  padding: 16px 36px; border-radius: 8px;
+  cursor: pointer;
+}
+
+/* MISSION */
+.mission {
+  background: #0ABFA3;
+  padding: 28px 24px;
+  text-align: center;
+}
+.mission p {
+  font-size: 1.15rem; font-weight: 600;
+  color: #1A2744; max-width: 700px; margin: 0 auto;
+}
+
+/* SECTIONS */
+section { padding: 72px 24px; }
+.section-label {
+  font-size: 11px; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: #076B5C; margin-bottom: 10px;
+}
+h2 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700; color: #1A2744;
+  line-height: 1.15; margin-bottom: 12px;
+}
+h2 span { color: #0ABFA3; }
+.section-sub {
+  font-size: 1rem; color: #6B7A99;
+  max-width: 540px; line-height: 1.65; margin-bottom: 40px;
+}
+
+/* PRODUCT GRID */
+.products { background: #FAF9F6; }
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px; margin-top: 40px;
+}
+.product-card {
+  background: #fff;
+  border: 1px solid rgba(26,39,68,0.1);
+  border-radius: 14px;
+  padding: 24px;
+  display: flex; flex-direction: column;
+}
+.product-card.featured { border: 2px solid #0ABFA3; }
+.product-tag {
+  display: inline-block;
+  font-size: 11px; font-weight: 600; letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: 4px 10px; border-radius: 4px;
+  margin-bottom: 12px;
+}
+.product-card h3 {
+  font-size: 1.25rem; font-weight: 700;
+  margin-bottom: 10px; line-height: 1.25;
+}
+.product-card p {
+  font-size: 14px; color: #6B7A99;
+  line-height: 1.6; margin-bottom: 16px; flex: 1;
+}
+.product-card ul {
+  list-style: none; margin-bottom: 20px;
+}
+.product-card ul li {
+  font-size: 13px; color: #444;
+  padding: 4px 0; display: flex; gap: 8px; align-items: flex-start;
+}
+.product-card ul li::before {
+  content: '✓'; color: #0ABFA3; font-weight: 700; flex-shrink: 0;
+}
+.price {
+  font-size: 2rem; font-weight: 700; color: #1A2744;
+  margin-bottom: 14px;
+}
+.price span { font-size: 14px; font-weight: 400; color: #6B7A99; }
+
+/* BUY BUTTON — the most important element on the page */
+.buy-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: #1A2744;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+}
+.buy-btn:hover { background: #243560; }
+.buy-btn.teal { background: #0ABFA3; color: #1A2744; }
+.buy-btn.teal:hover { background: #08A88E; }
+.buy-btn.green { background: #27AE70; color: #fff; }
+
+/* BUNDLE */
+.bundle {
+  background: #1A2744;
+  border-radius: 16px;
+  padding: 40px;
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: center;
+}
+@media(max-width:640px){ .bundle { grid-template-columns: 1fr; } }
+.bundle h3 {
+  font-size: 1.8rem; font-weight: 700; color: #fff; margin-bottom: 10px;
+}
+.bundle p { color: rgba(255,255,255,0.6); font-size: 14px; margin-bottom: 16px; }
+.bundle ul { list-style: none; }
+.bundle ul li {
+  font-size: 14px; color: rgba(255,255,255,0.7);
+  padding: 5px 0; display: flex; gap: 8px;
+}
+.bundle ul li::before { content: '✓'; color: #0ABFA3; font-weight: 700; }
+.bundle-price { text-align: center; }
+.bundle-was { font-size: 14px; color: rgba(255,255,255,0.35); text-decoration: line-through; margin-bottom: 4px; }
+.bundle-amount { font-size: 4rem; font-weight: 700; color: #0ABFA3; line-height: 1; margin-bottom: 4px; }
+.bundle-save {
+  display: inline-block;
+  background: rgba(10,191,163,0.15);
+  border: 1px solid rgba(10,191,163,0.3);
+  color: #0ABFA3; font-size: 12px; font-weight: 600;
+  padding: 4px 12px; border-radius: 20px; margin-bottom: 20px;
+}
+
+/* WHO */
+.who { background: #fff; }
+.who-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px; margin-top: 40px;
+}
+.who-card {
+  background: #FAF9F6;
+  border: 1px solid rgba(26,39,68,0.08);
+  border-radius: 12px; padding: 20px;
+}
+.who-icon { font-size: 28px; margin-bottom: 10px; }
+.who-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.who-card p { font-size: 13px; color: #6B7A99; line-height: 1.55; }
+
+
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4DJEG1JC09"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4DJEG1JC09');
+</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#home" class="logo">The Zebra Files</a>
+  <ul class="nav-links">
+    <li><a href="#products">Products</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#products" class="nav-btn">Get the Tools</a></li>
+  </ul>
+  <button class="hamburger" aria-label="Open menu" onclick="toggleMenu(this)">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div id="mobile-menu">
+  <ul>
+    <li><a href="#products" onclick="closeMenu()">Products</a></li>
+    <li><a href="#how" onclick="closeMenu()">How It Works</a></li>
+    <li><a href="#about" onclick="closeMenu()">About</a></li>
+    <li><a href="#faq" onclick="closeMenu()">FAQ</a></li>
+  </ul>
+  <a href="#products" class="mob-cta" onclick="closeMenu()">Get the Tools</a>
+</div>
+
+<!-- LAUNCH BANNER -->
+<div style="background:#0ABFA3;padding:12px 24px;text-align:center;position:fixed;top:60px;left:0;right:0;z-index:99">
+  <p style="color:#1A2744;font-weight:700;font-size:14px;margin:0">🎉 Launch Week Pricing — Tools from $2. <a href='#products' style='color:#1A2744;text-decoration:underline'>Shop now ↓</a></p>
+</div>
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-eyebrow">Palliative Care Education Program</div>
+  <h1>Your body.<br><span>Your documents.</span><br>Your safety.</h1>
+  <p>Patient-created tools for complex chronic illness — designed to speak for you when you can't speak for yourself. Built by a zebra, for zebras.</p>
+  <a href="#products" class="hero-btn">See the tools ↓</a>
+</section>
+
+<!-- MISSION -->
+<div class="mission">
+  <p>Palliative care isn't just end-of-life. It's quality of life — for everyone living with serious, complex illness right now.</p>
+</div>
+
+<!-- WHO -->
+<section class="who" id="who">
+  <div class="section-label">Who these tools are for</div>
+  <h2>Made for <span>complex patients</span></h2>
+  <p class="section-sub">If you've ever had to explain your entire medical history in an ER waiting room, these tools are for you.</p>
+  <div class="who-grid">
+    <div class="who-card">
+      <div class="who-icon">🦓</div>
+      <h3>EDS & Connective Tissue</h3>
+      <p>Hypermobility, joint instability, POTS, MCAS, and the full zebra experience of navigating a system that doesn't believe you.</p>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">🧠</div>
+      <h3>Rare & Chronic Illness</h3>
+      <p>Any condition that takes years to diagnose and even longer to explain to providers who've never heard of it.</p>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">💊</div>
+      <h3>Complex Medication Needs</h3>
+      <p>Multiple conditions, multiple specialists, pharmacogenomics that mean standard medications don't work as expected.</p>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">🏥</div>
+      <h3>Pre-Surgery & Hospital Prep</h3>
+      <p>Anyone facing procedures who needs their medical team to understand their complexity before anything is administered.</p>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">👨‍👩‍👧</div>
+      <h3>Caregivers & Advocates</h3>
+      <p>Family members and friends who need to speak for someone when that person can't speak for themselves.</p>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">✨</div>
+      <h3>Neurodivergent Patients</h3>
+      <p>ADHD, autism, brain fog — every tool is designed to be simple, clear, and easy to fill out without tech overwhelm.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products" id="products">
+  <div class="section-label">Digital tools</div>
+  <h2>Everything you need <span>in the room</span></h2>
+  <p class="section-sub">Fillable PDFs. Click, type, print. No Word. No tech skills. No accidentally breaking anything.</p>
+
+  <div class="product-grid">
+
+    <div class="product-card">
+      <span class="product-tag" style="background:#E4F8F5;color:#076B5C">Fillable PDF</span>
+      <h3>Patient Medical Resume</h3>
+      <p>The document that speaks for you when you can't. A complete clinical snapshot of your diagnoses, medications, surgeries, care team, and more.</p>
+      <ul>
+        <li>9 color-coded sections</li>
+        <li>Pharmacogenomics table built in</li>
+        <li>Drug allergies & contraindications</li>
+        <li>Care team + emergency contacts</li>
+        <li>Fillable PDF + editable Word doc</li>
+      </ul>
+      <div class="price">$2 <span style="text-decoration:line-through;color:#aaa;font-size:1rem">$9</span> <span>· launch week</span></div>
+      <a class="buy-btn" href="https://zebrafiles.gumroad.com/l/ayhwt" target="_blank">Get this tool</a>
+    </div>
+
+    <div class="product-card featured">
+      <span class="product-tag" style="background:#FDEEED;color:#A82D1D">⚠ Provider Tool</span>
+      <h3>Post-Op Critical Care Alert</h3>
+      <p>Hand this to your surgical team before anything is given to you. Contraindications, PGx, hemodynamic directives, MCAS protocol — all on one page.</p>
+      <ul>
+        <li>Contraindicated medications</li>
+        <li>Full pharmacogenomics panel</li>
+        <li>POTS, MCAS & GI directives</li>
+        <li>Surgical history with cautions</li>
+        <li>Emergency contacts for providers</li>
+      </ul>
+      <div class="price">$2 <span style="text-decoration:line-through;color:#aaa;font-size:1rem">$9</span> <span>· launch week</span></div>
+      <a class="buy-btn" href="https://zebrafiles.gumroad.com/l/lhloec" target="_blank">Get this tool</a>
+    </div>
+
+    <div class="product-card">
+      <span class="product-tag" style="background:#F1EDFB;color:#4D3380">Step-by-Step Guide</span>
+      <h3>Genetic Testing + AI Guide</h3>
+      <p>Your genes affect how your body handles medications. This guide shows you how to find that out — and use it. No science background needed. Just follow the steps.</p>
+      <ul>
+        <li>4 ways to get tested — including free options</li>
+        <li>Exact prompts to paste into AI — no guessing</li>
+        <li>Plain language — no tech skills needed</li>
+        <li>What to do if you get confused or stuck</li>
+        <li>How to share results with your care team</li>
+      </ul>
+      <div class="price">$5 <span style="text-decoration:line-through;color:#aaa;font-size:1rem">$12</span> <span>· launch week</span></div>
+      <a class="buy-btn" href="https://zebrafiles.gumroad.com/l/dzryv" target="_blank">Get this guide</a>
+    </div>
+
+    
+
+  </div>
+
+
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-label">How it works</div>
+  <h2>How it <span>works</span></h2>
+  <p class="section-sub">Made for brain fog days. No tech skills needed. If you can type in a box, you can use these tools.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num" style="background:#E4F8F5;color:#076B5C">1</div>
+      <h3>Buy and download</h3>
+      <p>After you pay, the file downloads right away. Open it on your phone, tablet, or computer — no special software needed.</p>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#E8F3FD;color:#1D5FA0">2</div>
+      <h3>Click a box and type</h3>
+      <p>Tap or click any shaded box and start typing. That's it. Nothing moves around. Nothing breaks. Save the file when you're done.</p>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#FDEEED;color:#A82D1D">3</div>
+      <h3>Print it and bring it</h3>
+      <p>Print a few copies. Keep one in your bag, one in your car. Hand it to every new provider, every ER nurse, every surgeon before they touch you.</p>
+    </div>
+    <div class="step">
+      <div class="step-num" style="background:#E4F8EE;color:#145C3A">4</div>
+      <h3>Update it when things change</h3>
+      <p>New medication? New diagnosis? Open the file, change what you need, save it, and print a fresh copy. Takes about two minutes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-grid">
+    <div class="quote-box">
+      <p class="quote-text">"I woke up from surgeries without my providers understanding what they were dealing with. I built these documents so that never has to happen to you."</p>
+      <div class="quote-attr">
+        Kathleen Zinno
+        <span>Creator, The Zebra Files · Patient advocate · EDS, POTS, MCAS</span>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">About the creator</div>
+      <h2>Built from <span>lived experience</span></h2>
+      <p style="color:#6B7A99;line-height:1.65;margin-top:12px">These tools were not made in a conference room. They were built in hospital beds, waiting rooms, and the years it takes to learn how to survive a broken system.</p>
+      <ul class="cred-list">
+        <li><div class="cred-dot" style="background:#0ABFA3"></div>Diagnosed with EDS, POTS, MCAS, IIH, tethered cord, and more — after 7 years of misdiagnosis</li>
+        <li><div class="cred-dot" style="background:#4A90D9"></div>20+ surgeries including cranial cervical fusion, spinal fusion, VP shunt, and tethered cord release</li>
+        <li><div class="cred-dot" style="background:#7C5CBF"></div>Published patient voice writer at Chronic Pain Partners / EDS Awareness</li>
+        <li><div class="cred-dot" style="background:#27AE70"></div>10 years of patient advocacy and medical cannabis policy work</li>
+        <li><div class="cred-dot" style="background:#E8704A"></div>Single parent navigating complex illness</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-label">Questions</div>
+  <h2>Common <span>questions</span></h2>
+  <div class="faq-grid">
+    <div class="faq-item">
+      <h4>Do I need Microsoft Word or special software?</h4>
+      <p>No. The fillable PDFs work in any free PDF viewer — Adobe Acrobat Reader, Apple Preview, or your phone's built-in PDF app.</p>
+    </div>
+    <div class="faq-item">
+      <h4>What if I have brain fog or struggle with technology?</h4>
+      <p>These tools were specifically designed for that. Click a box, type, done. The PDF is the easy option — nothing can break.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Do I need genetic testing to use the documents?</h4>
+      <p>No. The PGx sections are optional. Leave them blank and fill in everything else. The guide shows you how to get testing later if you want.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Can I share these with my providers?</h4>
+      <p>Absolutely — that's the whole point. Print them, email them. Hand the Post-Op Alert to every nurse who checks you in.</p>
+    </div>
+    <div class="faq-item">
+      <h4>Will these work for conditions other than EDS?</h4>
+      <p>Yes. The templates are fully blank — you fill in your own diagnoses, medications, and history. They work for any complex chronic illness.</p>
+    </div>
+    <div class="faq-item">
+      <h4>What is the refund policy?</h4>
+      <p>Because these are instant digital downloads, all sales are final. If something is wrong with your file, contact us and we'll make it right immediately.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SIGNUP -->
+<section class="signup" id="signup">
+  <h2>New tools are coming.</h2>
+  <p>Recipe book. Spoon-saving guide. Parenting post-op. Sign up to be first to know.</p>
+  <form class="signup-form" onsubmit="handleSignup(event)">
+    <input type="email" placeholder="your@email.com" required>
+    <button type="submit">Notify me</button>
+  </form>
+  <p class="signup-note">No spam. Unsubscribe anytime.</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">The Zebra Files</div>
+      <p class="footer-tagline">Palliative care education for complex patients — built from the inside out.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Products</div>
+      <ul class="footer-links">
+        <li><a href="https://zebrafiles.gumroad.com/l/ayhwt" target="_blank">Medical Resume</a></li>
+        <li><a href="https://zebrafiles.gumroad.com/l/lhloec" target="_blank">Post-Op Alert</a></li>
+        <li><a href="https://zebrafiles.gumroad.com/l/dzryv" target="_blank">PGx Guide</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Navigate</div>
+      <ul class="footer-links">
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#who">Who It's For</a></li>
+        <li><a href="#about">About Kathleen</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Connect</div>
+      <ul class="footer-links">
+        <li><a href="https://www.instagram.com/thezebrafiles" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+        <li><a href="https://www.tiktok.com/@thezebrafiles" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+        <li><a href="https://www.facebook.com/profile.php?id=61590038851920" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 The Zebra Files. All rights reserved. Digital products — no refunds on downloads.</p>
+  </div>
+</footer>
+<script>
+function toggleMenu(btn) {
+  const m = document.getElementById('mobile-menu');
+  const open = m.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open);
+}
+function closeMenu() {
+  document.getElementById('mobile-menu').classList.remove('open');
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeMenu(); });
+
+function handleSignup(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.textContent = '✓ Done!';
+  btn.style.background = '#27AE70';
+  e.target.querySelector('input').value = '';
+  setTimeout(() => { btn.textContent = 'Notify me'; btn.style.background = ''; }, 3000);
+}
+</script>
+
+</body>
+</html>
